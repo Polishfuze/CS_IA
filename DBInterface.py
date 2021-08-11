@@ -11,7 +11,7 @@ def checkConnect():
     except:
         return False
 
-def createTables(create1 = True, create2 = True, create3 = True):
+def createTables(create1 = True, create2 = True, create3 = True, create4 = True):
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
     if create1:
         table1 = dynamodb.create_table(
@@ -103,6 +103,28 @@ def createTables(create1 = True, create2 = True, create3 = True):
             )
         table3.meta.client.get_waiter('table_exists').wait(TableName='CSIAAddStudent')
         print(table3.item_count)
+    if create4:
+        table4 = dynamodb.create_table(
+            TableName='LoginTable',
+            KeySchema=[
+                {
+                    'AttributeName': 'username',
+                    'KeyType': 'HASH'
+                }
+                ],
+            AttributeDefinitions=[
+                {
+                    'AttributeName': 'username',
+                    'AttributeType': 'S'
+                }
+                ],
+            ProvisionedThroughput={
+                'ReadCapacityUnits': 5,
+                'WriteCapacityUnits': 5
+                }
+            )
+        table4.meta.client.get_waiter('table_exists').wait(TableName='CSIAMovementTable')
+        print(table4.item_count)
 
 def pullAllStudents():
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
@@ -175,7 +197,8 @@ def createStudent(name, studentId=None, debug=False):
     return studentId
 
 if __name__ == '__main__':
+    # dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
     print(checkConnect())
     # print(createStudent('Michal Rajzer'))
     # pushStudent('-42527281', debug=True)
-    createTables(create1=False, create2=False, create3=False)
+    createTables(create1=False, create2=False, create3=False, create4=False)

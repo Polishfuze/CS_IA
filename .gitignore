@@ -1,2 +1,4 @@
 /docs
 *.zip
+__pycache__
+.vscode
