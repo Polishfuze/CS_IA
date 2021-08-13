@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, flash, redirect
+from flask import Flask, render_template, url_for, flash, redirect, session
 from forms import RegistrationForm, LoginForm
 from databaseManagement import verifyPassword, registerUser
 
@@ -19,6 +19,10 @@ dummyStudentData = [
     }
 ]
 
+
+def load_user(user_id):
+    return User(user_id)
+
 @app.route("/", methods=['GET', 'POST'])
 def home():
     return render_template('home.html', title='Name lmao')
@@ -32,10 +36,13 @@ def lipsum():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    if 'username' in session:
+        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
         if verifyPassword(form.username.data, form.password.data):
             flash('You have been loggen in!', 'success')
+            session['username'] = form.username.data
             return redirect(url_for('home'))
         else:
             flash('Login unsuccessful, please check your username and password', 'danger')
@@ -47,15 +54,26 @@ def footer():
 
 @app.route("/database", methods=['GET', 'POST'])
 def databaseDisp():
+    if 'username' not in session:
+        flash('You must be logged in to view that section!', 'danger')
+        return redirect(url_for('login'))
     return render_template('databaseDisp.html', students=dummyStudentData, title='Ur viewing the DB')
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    if 'username' in session:
+        return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
+        registerUser(form.username.data, form.email.data, form.password.data)
         flash(f'Account created for {form.username.data}!', 'success')
         return redirect(url_for('home'))
     return render_template('register.html', title='Name - register', form=form)
+
+@app.route("/logout", methods=['GET', 'POST'])
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('home'))
 
 if __name__ == "__main__":
     app.run(debug=True)
