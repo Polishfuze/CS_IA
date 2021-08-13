@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+    <table>
+        {% for student in students %}
+            <tr>
+                <th>{{student.name}}</th>
+                <th>{{student.time}}</th>
+                <th>{{student.isinSchool}}</th>
+        {% endfor %}
+    </table>
+{% endblock %}
