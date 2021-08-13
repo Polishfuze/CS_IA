@@ -11,13 +11,14 @@ def verifyPassword(username, password):
     isThePasswordCorrect = bcrypt.check_password_hash(passwordHash, password)
     return isThePasswordCorrect
 
-def registerUser(username, password):
+def registerUser(username, email, password):
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
     bcrypt = Bcrypt()
     table = dynamodb.Table('LoginTable')
     data = {
         'username':username.lower(),
         'password': bcrypt.generate_password_hash(password).decode('utf-8'),
+        'email':email.lower(),
         }
     table.put_item(Item=data)
 

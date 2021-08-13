@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
-    <table>
+    <table class="db">
         {% for student in students %}
-            <tr>
-                <th>{{student.name}}</th>
-                <th>{{student.time}}</th>
-                <th>{{student.isinSchool}}</th>
+            <tr class="db_row">
+                <th class="db_cell">{{student.name}}</th>
+                <th class="db_cell">{{student.time}}</th>
+                <th class="db_cell">{{student.isinSchool}}</th>
         {% endfor %}
     </table>
 {% endblock %}
