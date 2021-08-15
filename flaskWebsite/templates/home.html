@@ -1,4 +1,8 @@
-{% extends "layout.html" %}
+{% if not loggedIn %}
+    {% extends "layout.html" %}
+{% else %}
+    {% extends "layout_loggedin.html" %}
+{% endif %}
 {% block content %}
 <h1>Hello to my site B)</h1>
 {% endblock %}
