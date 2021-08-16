@@ -1,4 +1,4 @@
-from flask import Blueprint, session, url_for, redirect, render_template, flash
+from flask import Blueprint, session, url_for, redirect, render_template, flash, current_app
 from flasksite.users.databaseMgmt import verifyPassword, registerUser, getUserData
 from flasksite.users.forms import LoginForm, RegistrationForm
 from itsdangerous import TimedJSONWebSignatureSerializer as TokenSerializer
@@ -45,7 +45,7 @@ def logout():
 def reset_password(token):
     if 'username' in session:
         return redirect(url_for('staticPages.home'))
-    s = TokenSerializer(users.config['SECRET_KEY'])
+    s = TokenSerializer(current_app.config['SECRET_KEY'])
     username = ''
     try:
         username = s.loads(token)
