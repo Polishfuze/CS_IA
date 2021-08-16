@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, flash, redirect, session
 from forms import RegistrationForm, LoginForm
-from databaseManagement import verifyPassword, registerUser, getStudentsNormal, getAllMovement
+from databaseManagement import verifyPassword, registerUser, getStudentsNormal, getAllMovement, getUserData
+from itsdangerous import TimedJSONWebSignatureSerializer as TokenSerializer
 
 app = Flask(__name__)
 
@@ -76,6 +77,21 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('home'))
 
+
+@app.route("/reset_password/<token>", methods=['GET', 'POST'])
+def reset_password(token):
+    if 'username' in session:
+        return redirect(url_for('home'))
+    s = TokenSerializer(app.config['SECRET_KEY'])
+    username = ''
+    try:
+        username = s.loads(token)
+    except:
+        flash('That token is invalid or expired!', 'warning')
+        return redirect(url_for('home'))
+    userData = getUserData(username)
+    
+    
 
 if __name__ == "__main__":
     app.run(debug=True)

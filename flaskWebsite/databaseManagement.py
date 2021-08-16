@@ -65,6 +65,13 @@ def getAllMovement():
     return response['Items']
 
 
+def getUserData(username):
+    dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
+    table = dynamodb.Table('LoginTable')
+    response = table.get_item(Key={'username': username.lower()})
+    return response['Item']
+
+
 def createResetToken(username):
     pass
 
