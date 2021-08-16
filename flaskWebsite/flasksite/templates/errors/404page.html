@@ -1,0 +1,8 @@
+{% if not loggedIn %}
+    {% extends "layout.html" %}
+{% else %}
+    {% extends "layout_loggedin.html" %}
+{% endif %}
+{% block content %}
+    <h1>Oops this page doesn't seem to exist! (404)</h1>
+{% endblock %}
