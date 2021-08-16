@@ -2,7 +2,6 @@ import boto3
 from boto3.dynamodb.conditions import Key
 from flask_bcrypt import Bcrypt
 
-
 def verifyPassword(username, password):
     bcrypt = Bcrypt()
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
@@ -51,36 +50,8 @@ def checkIfEmailExists(email):
         return True
 
 
-def getStudentsNormal():
-    dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
-    table = dynamodb.Table('CSIA_Students_Table')
-    response = table.scan()
-    return response['Items']
-
-
-def getAllMovement():
-    dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
-    table = dynamodb.Table('CSIA_Movement_Table')
-    response = table.scan()
-    return response['Items']
-
-
 def getUserData(username):
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
     table = dynamodb.Table('LoginTable')
     response = table.get_item(Key={'username': username.lower()})
     return response['Item']
-
-
-def createResetToken(username):
-    pass
-
-
-if __name__ == '__main__':
-    pass
-    print(getAllMovement())
-    getStudentsNormal()
-    print(checkIfEmailExists("michalek.raj@gmail.com"))
-    print(checkIfEmailExists("michaadsdaslek.raj@gmail.com"))
-    # registerUser('as', '123')
-    # print(getPasswordHash('M@gmail'))
