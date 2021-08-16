@@ -5,14 +5,26 @@ body {
     padding: 0;
 }
 
-.db, .db_row, .db_cell {
+.db_cell {
+  text-align: center;
   border: 1px solid black;
+  padding: 5px;
+  width: 25%;
 }
-.db_row, .db_cell {
-    padding: 5px;
-}
+
 .db {
     width:100%;
+    border: 1px solid black;
+}
+
+.db_row{
+  background:#fafafa;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.db_row:hover {
+  background:#aaa;
 }
 
 :root {

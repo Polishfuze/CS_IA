@@ -1,0 +1,27 @@
+{% extends "layout_loggedin.html" %}
+{% block content %}
+<br>
+<h1>This is the view of the database and where exactly are all the students.</h1>
+<br>
+<h3>If you are looking for the exact display of every interaction every student had with a reader consider looking at the <a href="{{ url_for('databaseDisp') }}" class="text-decoration-none text-reset"> movement tab </a></h3>
+<br>
+<br>
+<table class="db">
+    <tr class="db_row">
+        <th class="db_cell">Student's name</th>
+        <th class="db_cell">Where are they now?</th>
+        <th class="db_cell">What's their class?</th>
+    </tr>
+    {% for student in students %}
+    <tr class="db_row">
+        <td class="db_cell">{{student.StudentName}}</th>
+        {% if student.State == 'OutOfSchool' %}
+            <td class="db_cell">Out of school</th>
+        {% else%}
+            <td class="db_cell">In school</th>
+        {% endif %}
+        <td class="db_cell">{{student.Headteacher}}</th>
+        </tr>
+        {% endfor %}
+</table>
+{% endblock %}

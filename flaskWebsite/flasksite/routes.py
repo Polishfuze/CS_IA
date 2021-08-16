@@ -1,12 +1,16 @@
-from flask import Flask, render_template, url_for, flash, redirect, session
-from forms import RegistrationForm, LoginForm
-from databaseManagement import verifyPassword, registerUser, getStudentsNormal, getAllMovement, getUserData
+from flask import render_template, url_for, flash, redirect, session
+from flasksite.forms import RegistrationForm, LoginForm
+from flasksite.databaseManagement import verifyPassword, registerUser, getStudentsNormal, getAllMovement, getUserData
 from itsdangerous import TimedJSONWebSignatureSerializer as TokenSerializer
+from operator import itemgetter
+from datetime import datetime
+from flasksite import app
 
-app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'ae98dbd984f73925c453eb1164f2b036'
-
+@app.template_filter('timestampToDate')
+def pretty_date(timestamp):
+    dt_object = datetime.fromtimestamp(timestamp)
+    return dt_object
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -49,7 +53,10 @@ def databaseDisp():
     if 'username' not in session:
         flash('You must be logged in to view that section!', 'danger')
         return redirect(url_for('login'))
-    return render_template('databaseDisp.html', students=getAllMovement(), title='Ur viewing the DB')
+    data = getAllMovement()
+    sortedStudents = sorted(data, key=itemgetter('MovementID'), reverse=True)
+
+    return render_template('databaseDisp.html', students=sortedStudents, title='Ur viewing the DB')
 
 
 @app.route("/students", methods=['GET', 'POST'])
@@ -90,9 +97,3 @@ def reset_password(token):
         flash('That token is invalid or expired!', 'warning')
         return redirect(url_for('home'))
     userData = getUserData(username)
-    
-    
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
