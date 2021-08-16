@@ -1,0 +1,9 @@
+{% if not loggedIn %}
+    {% extends "layout.html" %}
+{% else %}
+    {% extends "layout_loggedin.html" %}
+{% endif %}
+{% block content %}
+    <h1>Something went wrong (500)</h1>
+    <h1>We're having some problems on our end, please try again soon</h1>
+{% endblock %}
