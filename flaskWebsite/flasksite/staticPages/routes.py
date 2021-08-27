@@ -5,18 +5,35 @@ staticPages = Blueprint('staticPages', __name__)
 
 @staticPages.route("/", methods=['GET', 'POST'])
 def home():
-    isLoggedIn = False
     if 'username' in session:
-        isLoggedIn = True
-    return render_template('home.html', title='Name lmao', loggedIn=isLoggedIn)
+        loggedIn = True
+        roles = session['roles']
+        username = session['username']
+    else:
+        roles = []
+        loggedIn = False
+        username = ""
+    return render_template('home.html', title='Name lmao', logggedIn=loggedIn, roles=roles, username=username)
 
 
 # Needed for debugging
 @staticPages.route("/lipsum", methods=['GET', 'POST'])
 def lipsum():
-    return render_template('lipsum.html', title='lipsum')
+    if 'username' in session:
+        loggedIn = True
+        roles = session['roles']
+    else:
+        roles = []
+        loggedIn = False
+    return render_template('lipsum.html', title='lipsum', logggedIn=loggedIn, roles=roles)
 
 
 @staticPages.route("/footer")
 def footer():
-    return render_template('footerReplacement.html', title='Name - login')
+    if 'username' in session:
+        loggedIn = True
+        roles = session['roles']
+    else:
+        roles = []
+        loggedIn = False
+    return render_template('footerReplacement.html', title='Name - login', logggedIn=loggedIn, roles=roles)

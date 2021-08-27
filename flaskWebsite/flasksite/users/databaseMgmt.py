@@ -5,29 +5,33 @@ from flask_bcrypt import Bcrypt
 def verifyPassword(username, password):
     bcrypt = Bcrypt()
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
-    table = dynamodb.Table('LoginTable')
+    table = dynamodb.Table('CSIA_Login_Table')
     response = table.get_item(Key={'username': username.lower()})
-    # print(response)
+    print(response)
     passwordHash = response['Item']['password']
+    roles = []
     isThePasswordCorrect = bcrypt.check_password_hash(passwordHash, password)
-    return isThePasswordCorrect
+    if isThePasswordCorrect:
+        roles = response['Item']['roles'].split(sep='&')
+    return [isThePasswordCorrect, roles]
 
 
 def registerUser(username, email, password):
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
     bcrypt = Bcrypt()
-    table = dynamodb.Table('LoginTable')
+    table = dynamodb.Table('CSIA_Login_Table')
     data = {
         'username': username.lower(),
         'password': bcrypt.generate_password_hash(password).decode('utf-8'),
         'email': email.lower(),
+        'roles': "",
     }
     table.put_item(Item=data)
 
 
 def checkIfUsernameExists(username):
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
-    table = dynamodb.Table('LoginTable')
+    table = dynamodb.Table('CSIA_Login_Table')
     response = table.get_item(Key={'username': username.lower()})
     # print(response)
     if 'Item' in response:
@@ -38,7 +42,7 @@ def checkIfUsernameExists(username):
 
 def checkIfEmailExists(email):
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
-    table = dynamodb.Table('LoginTable')
+    table = dynamodb.Table('CSIA_Login_Table')
     scan_kwargs = {
         'FilterExpression': Key('email').eq(email.lower())
     }
@@ -52,6 +56,9 @@ def checkIfEmailExists(email):
 
 def getUserData(username):
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
-    table = dynamodb.Table('LoginTable')
+    table = dynamodb.Table('CSIA_Login_Table')
     response = table.get_item(Key={'username': username.lower()})
     return response['Item']
+
+if __name__ == '__main__':
+    pass

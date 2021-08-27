@@ -1,4 +1,4 @@
-{% extends "layout_loggedin.html" %}
+{% extends "layout.html" %}
 {% block content %}
 <br>
 <h1>This is the view of the database and of all the interactions the student's interactions.</h1>
@@ -20,7 +20,7 @@
         <td class="db_cell">{{student.MovementID}}</td>
         <td class="db_cell">{{student.StudentName}}</td>
         <td class="db_cell">{{student.Timestamp|timestampToDate}}</td>
-        <td class="db_cell">{{student.Movement}}</td>
+        <td class="db_cell">{{student.Movement}}</td>   
     </tr>
         {% endfor %}
 </table>

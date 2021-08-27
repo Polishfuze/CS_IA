@@ -14,13 +14,16 @@ def login():
         return redirect(url_for('staticPages.home'))
     form = LoginForm()
     if form.validate_on_submit():
-        if verifyPassword(form.username.data, form.password.data):
+        pwdCheck = verifyPassword(form.username.data, form.password.data)
+        if pwdCheck[0]:
             flash('You have been loggen in!', 'success')
             session['username'] = form.username.data
+            session['roles'] = pwdCheck[1]
+            print(session['roles'])
             return redirect(url_for('staticPages.home'))
         else:
             flash('Login unsuccessful, please check your username and password', 'danger')
-    return render_template('login.html', title='Name - login', form=form)
+    return render_template('login.html', title='Name - login', logggedIn=False, roles=[], form=form)
 
 
 @users.route("/register", methods=['GET', 'POST'])
@@ -32,7 +35,7 @@ def register():
         registerUser(form.username.data, form.email.data, form.password.data)
         flash(f'Account created for {form.username.data}!', 'success')
         return redirect(url_for('staticPages.home'))
-    return render_template('register.html', title='Name - register', form=form)
+    return render_template('register.html', title='Name - register', logggedIn=False, roles=[], form=form)
 
 
 @users.route("/logout", methods=['GET', 'POST'])
