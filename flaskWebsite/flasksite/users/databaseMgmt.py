@@ -27,6 +27,7 @@ def registerUser(username, email, password):
         'roles': "",
     }
     table.put_item(Item=data)
+    return
 
 
 def checkIfUsernameExists(username):
@@ -34,10 +35,7 @@ def checkIfUsernameExists(username):
     table = dynamodb.Table('CSIA_Login_Table')
     response = table.get_item(Key={'username': username.lower()})
     # print(response)
-    if 'Item' in response:
-        return True
-    else:
-        return False
+    return 'Item' in response
 
 
 def checkIfEmailExists(email):
