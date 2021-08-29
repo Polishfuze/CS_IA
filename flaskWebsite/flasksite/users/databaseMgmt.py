@@ -8,7 +8,10 @@ def verifyPassword(username, password):
     table = dynamodb.Table('CSIA_Login_Table')
     response = table.get_item(Key={'username': username.lower()})
     print(response)
-    passwordHash = response['Item']['password']
+    try:
+        passwordHash = response['Item']['password']
+    except KeyError:
+        return [False, []]
     roles = []
     isThePasswordCorrect = bcrypt.check_password_hash(passwordHash, password)
     if isThePasswordCorrect:

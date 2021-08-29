@@ -49,5 +49,8 @@ def addStudents():
         roles = session['roles']
     print('b')
     form = AddStudentForm()
+    if form.validate_on_submit():
+        addStudentsToProg(form.studentName, form.teacherName)
+        flash(f'Account created for {form.username.data}!', 'success')
     form.teacherName.choices=getAllTeachers()
     return render_template('addStudents.html', students=getStudentsNormal(), title='Ur viewing the DB', logggedIn=loggedIn, roles=roles, form=form)

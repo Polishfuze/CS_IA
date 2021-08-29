@@ -4,9 +4,9 @@ from wtforms.validators import DataRequired, Length, ValidationError
 from flasksite.databases.databaseMgmt import checkIfStudentExists
 
 class AddStudentForm(FlaskForm):
-    studentName = StringField('StudentName', validators=[DataRequired(), Length(min=2, max=128)])
-    teacherName = SelectField('TeacherName', choices=[])
-    submit = SubmitField('Sign in')
+    studentName = StringField("Student's Name", validators=[DataRequired(), Length(min=2, max=128)])
+    teacherName = SelectField("Teacher's Name", choices=[])
+    submit = SubmitField('Add student!')
 
     def validate_studentName(self, studentName):
         if checkIfStudentExists(studentName):
