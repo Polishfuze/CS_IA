@@ -1,12 +1,25 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session
 
 errors = Blueprint('errors', __name__)
 
+
 @errors.app_errorhandler(404)
 def error_404(error):
-    return render_template('errors/404page.html'), 404
+    if 'username' not in session:
+        loggedIn = False
+        roles = session['roles']
+    else:
+        loggedIn = True
+        roles = session['roles']
+    return render_template('errors/404page.html', logggedIn=loggedIn, roles=roles), 404
 
 
 @errors.app_errorhandler(500)
 def error_500(error):
-    return render_template('errors/500page.html'), 500
+    if 'username' not in session:
+        loggedIn = False
+        roles = session['roles']
+    else:
+        loggedIn = True
+        roles = session['roles']
+    return render_template('errors/500page.html', logggedIn=loggedIn, roles=roles), 500

@@ -8,53 +8,53 @@
             <div class="form-group">
                 {{ form.username.label(class="form-control-label") }}
                 {% if form.username.errors %}
-                    {{ form.username(class="form-control is-invalid") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.username.errors %}
-                            <span> {{ error }}</span>
-                        {% endfor %}
-                    </div>
+                {{ form.username(class="form-control is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.username.errors %}
+                    <span> {{ error }}</span>
+                    {% endfor %}
+                </div>
                 {% else %}
-                    {{ form.username(class="form-control form-control-lg") }}
+                {{ form.username(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
             <div class="form-group">
                 {{ form.email.label(class="form-control-label") }}
                 {% if form.email.errors %}
-                    {{ form.email(class="form-control is-invalid") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.email.errors %}
-                        <span> {{ error }}</span>
-                        {% endfor %}
-                    </div>
+                {{ form.email(class="form-control is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.email.errors %}
+                    <span> {{ error }}</span>
+                    {% endfor %}
+                </div>
                 {% else %}
-                    {{ form.email(class="form-control form-control-lg") }}
+                {{ form.email(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
             <div class="form-group">
                 {{ form.password.label(class="form-control-label") }}
-                    {% if form.password.errors %}
-                    {{ form.password(class="form-control is-invalid") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.password.errors %}
-                        <div> {{ error }}</div>
-                        {% endfor %}
-                    </div>
+                {% if form.password.errors %}
+                {{ form.password(class="form-control is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.password.errors %}
+                    <div> {{ error }}</div>
+                    {% endfor %}
+                </div>
                 {% else %}
-                    {{ form.password(class="form-control form-control-lg") }}
+                {{ form.password(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
             <div class="form-group">
                 {{ form.passwordConfirm.label(class="form-control-label") }}
-                    {% if form.passwordConfirm.errors %}
-                    {{ form.passwordConfirm(class="form-control is-invalid") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.passwordConfirm.errors %}
-                        <span> {{ error }}</span>
-                        {% endfor %}
-                    </div>
+                {% if form.passwordConfirm.errors %}
+                {{ form.passwordConfirm(class="form-control is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.passwordConfirm.errors %}
+                    <span> {{ error }}</span>
+                    {% endfor %}
+                </div>
                 {% else %}
-                    {{ form.passwordConfirm(class="form-control form-control-lg") }}
+                {{ form.passwordConfirm(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
         </fieldset>
