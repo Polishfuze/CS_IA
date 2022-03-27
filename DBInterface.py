@@ -16,14 +16,14 @@ def checkConnect():
 
 # The DB's are imagined to be constructed as such:
 # Table1: |Movement Index|UID|Name|Movement|Timestamp
-# Table2: |Name|UID|CurrentState|Headteacher/class
+# Table2: |Name|UID|CurrentState
 # Table3: |Username|Email|PasswordHash
-# Table4: |Name|Headteacher/class
+# Table4: |Name|
 
 def createTables(createTable1=True, createTable2=True, createTable3=True, createTable4=True):
     """Creates the required tables in dynamoDB, needs to be only ran once on initial deployment or in the event of a deletion of a table. 
     Table1 is the student movement table, it records every single proper (UID in the database) scan of the card, and allows to track when students are in and out of classes.
-    Table2 is the student table it stores a lot of information, firstly the UID of each student and their name, it also stores their current state (in school or not), and their class/headteacher (?TBD).
+    Table2 is the student table it stores a lot of information, firstly the UID of each student and their name, it also stores their current state (in school or not).
     Table3 is the login table, it stores the username, email, and hashed passwords of the staff that have access to the website.
     Table4 is the studentProgramming table, it is very similar to the student table, besides lacking a UID, and the current state in it's data.
     By default this creates all tables.

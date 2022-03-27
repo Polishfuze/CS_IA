@@ -64,7 +64,7 @@ main {
 p {
     font-size:24px;
 }
-
+  
 .navbar {
   position: fixed;
   background-color: var(--bg-primary);

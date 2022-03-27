@@ -9,7 +9,7 @@ from flasksite.config import Config
 
 def create_app(config_class=Config):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(config_class)
 
     app.register_blueprint(users)
     app.register_blueprint(errors)
