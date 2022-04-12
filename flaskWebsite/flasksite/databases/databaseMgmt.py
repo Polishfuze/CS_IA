@@ -1,6 +1,7 @@
 import boto3
 import hashlib
 
+
 def getStudentsNormal():
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
     table = dynamodb.Table('CSIA_Students_Table')
@@ -14,6 +15,7 @@ def getAllMovement():
     response = table.scan()
     return response['Items']
 
+
 def checkIfStudentExists(name):
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
     table1 = dynamodb.Table('CSIA_Students_Table')
@@ -22,6 +24,7 @@ def checkIfStudentExists(name):
     response2 = table2.get_item(Key={'StudentName': f'{name}'})
     # print(response)
     return 'Item' in response1 or 'Item' in response2
+
 
 def addStudentsToProg(name, teacher):
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
@@ -35,7 +38,14 @@ def addStudentsToProg(name, teacher):
         'UID': f'{UID}',
     }
     table.put_item(Item=data)
+    table = dynamodb.Table('CSIA_Movement_Table')
+    data = {
+        'MovementID': f'{name}',
+        'HeadTeacher': f'{teacher}',
+        'UID': f'{UID}',
+    }
     return
+
 
 def getAllTeachers():
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
@@ -45,9 +55,8 @@ def getAllTeachers():
     teachers = []
     for acc in response['Items']:
         if 'teacher' in acc['roles']:
-            teachers.append(acc['username']) 
+            teachers.append(acc['username'])
     return list(set(teachers))
-
 
 
 if __name__ == '__main__':

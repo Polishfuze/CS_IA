@@ -1,4 +1,4 @@
-import RFIDreader 
+import RFIDreader
 import RFIDwriter
 import DBInterface
 import time
@@ -10,7 +10,7 @@ x = None
 
 listOfStudentIDs = []
 
-for i in DBInterface.pullAllStudents()['Items']:
+for i in DBInterface.pullAllStudents():
     ID = i['StudentID']
     ID = RFIDreader.Padder(ID)
     listOfStudentIDs.append(ID)
@@ -33,15 +33,18 @@ while True:
             time.sleep(0.1)
             if RFIDreader.ReadMFRC522() != RFIDreader.Padder(IDToProgram):
                 print("Write Failed!!!")
-            prevX = RFIDreader.Padder(IDToProgram)
+            else:
+                listOfStudentIDs.append(RFIDreader.Padder(IDToProgram))
+                prevX = RFIDreader.Padder(IDToProgram)
         else:
             while len(ID) < len(progTag):
-                ID += ' '
+                ID = RFIDreader.Padder(ID)
             if ID in listOfStudentIDs:
                 print(f"Student with id {ID.split(' ')[0]} was here!")
                 DBInterface.pushStudent(ID.split(' ')[0])
             else:
                 print("Unknown tag!!!")
     else:
-        print(f"Card with id: {ID.split(' ')[0]} was scanned more than once ignoring it!")
+        print(
+            f"Card with id: {ID.split(' ')[0]} was scanned more than once ignoring it!")
         time.sleep(0.3)
