@@ -383,9 +383,10 @@ def StudentChangedState(UID, Name):
 #     return studentId
 if __name__ == '__main__':
     # dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
-    # createTables(createTable1=True, createTable2=False, createTable3=False, createTable4=False)
-    print(checkConnect())
-    print(GetAllStudents())
-    StudentChangedState('0001', 'Mike')
+    # createTables()
+    # print(checkConnect())
+    # print(GetAllStudents())
+    # StudentChangedState('0001', 'Mike')
     # print(createStudent('Michal Rajzer'))
     # pushStudent('-42527281', debug=True)
+    pass
