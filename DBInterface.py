@@ -201,7 +201,6 @@ def getStudentToProgram():
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
     table = dynamodb.Table('CSIA_Programming_Table')
     students = table.scan()['Items']
-    table.delete_item(Key=students[0])
     return students[0]
 
 
@@ -210,6 +209,26 @@ def pullAllStudents():
     table = dynamodb.Table('CSIA_Students_Table')
     return table.scan()['Items']
 
+def onSuccesfulProgram(name, teacher):
+    dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
+    table = dynamodb.Table('CSIA_Programming_Table')
+    table.delete_item(Key=name)
+    table = dynamodb.Table('CSIA_Movement_Table')
+    data = {
+        'MovementID': f'{0}',
+        'StudentName': f'{name}',
+        'Timestamp': f'{0}',
+        'Movement': f'{0}',
+    }
+    table.put_item(Item=data)
+    table = dynamodb.Table('CSIA_Students_Table')
+    data = {
+        'StudentName': f'{name}',
+        'State': f'{0}',
+        'Headteacher': f'{teacher}',
+    }
+    table.put_item(Item=data)
+    pass
 #
 #
 # def pullStudentByID(studentID):

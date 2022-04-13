@@ -1,6 +1,6 @@
 import boto3
 import hashlib
-
+ 
 
 def getStudentsNormal():
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
@@ -40,10 +40,19 @@ def addStudentsToProg(name, teacher):
     table.put_item(Item=data)
     table = dynamodb.Table('CSIA_Movement_Table')
     data = {
-        'MovementID': f'{name}',
-        'HeadTeacher': f'{teacher}',
-        'UID': f'{UID}',
+        'MovementID': f'{0}',
+        'StudentName': f'{name}',
+        'Timestamp': f'{0}',
+        'Movement': f'{0}',
     }
+    table.put_item(Item=data)
+    table = dynamodb.Table('CSIA_Students_Table')
+    data = {
+        'StudentName': f'{name}',
+        'State': f'{0}',
+        'Headteacher': f'{teacher}',
+    }
+    table.put_item(Item=data)
     return
 
 
