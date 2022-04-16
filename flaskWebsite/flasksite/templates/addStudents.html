@@ -1,32 +1,30 @@
-{% extends "layout.html" %}
-{% block content %}
+{% extends "layout.html" %} {% block content %}
 <div class="content-section">
-    <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Add student</legend>
-            <div class="form-group">
-                {{ form.studentName.label(class="form-control-label") }}
-                {% if form.studentName.errors %}
-                {{ form.studentName(class="form-control is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.studentName.errors %}
-                    <span> {{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {{ form.studentName(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.teacherName.label(class="form-control-label") }}
-                {{ form.teacherName(class="form-control form-control-lg") }}
-            </div>
-        </fieldset>
-        <br>
-        <div class="form-group">
-            {{ form.submit(class="btn btn-outline-info") }}
+  <form method="POST" action="{{ url_for('databases.addStudents') }}">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+      <legend class="border-bottom mb-4">Add student</legend>
+      <div class="form-group">
+        {{ form.studentName.label(class="form-control-label") }} {% if
+        form.studentName.errors %} {{ form.studentName(class="form-control
+        is-invalid") }}
+        <div class="invalid-feedback">
+          {% for error in form.studentName.errors %}
+          <span> {{ error }}</span>
+          {% endfor %}
         </div>
-    </form>
+        {% else %} {{ form.studentName(class="form-control form-control-lg") }}
+        {% endif %}
+      </div>
+      <div class="form-group">
+        {{ form.teacherName.label(class="form-control-label") }} {{
+        form.teacherName(class="form-control form-control-lg") }}
+      </div>
+    </fieldset>
+    <br />
+    <div class="form-group">
+      {{ form.submit(class="btn btn-outline-info") }}
+    </div>
+  </form>
 </div>
 {% endblock %}

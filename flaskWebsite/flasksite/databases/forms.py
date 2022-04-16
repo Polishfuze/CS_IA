@@ -9,5 +9,7 @@ class AddStudentForm(FlaskForm):
     submit = SubmitField('Add student!')
 
     def validate_studentName(self, studentName):
-        if checkIfStudentExists(studentName):
+        resp = checkIfStudentExists(studentName)
+        print(resp)
+        if resp:
             raise ValidationError('This student already exists!')

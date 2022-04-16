@@ -13,7 +13,7 @@ def home():
         roles = []
         loggedIn = False
         username = ""
-    return render_template('home.html', title='Name lmao', logggedIn=loggedIn, roles=roles, username=username)
+    return render_template('home.html', title='Home page', logggedIn=loggedIn, roles=roles, username=username)
 
 
 # Needed for debugging
@@ -25,7 +25,7 @@ def lipsum():
     else:
         roles = []
         loggedIn = False
-    return render_template('lipsum.html', title='lipsum', logggedIn=loggedIn, roles=roles)
+    return render_template('lipsum.html', title='Debug view', logggedIn=loggedIn, roles=roles)
 
 
 @staticPages.route("/footer")
@@ -36,4 +36,4 @@ def footer():
     else:
         roles = []
         loggedIn = False
-    return render_template('footerReplacement.html', title='Name - login', logggedIn=loggedIn, roles=roles)
+    return render_template('footerReplacement.html', title='Footer', logggedIn=loggedIn, roles=roles)

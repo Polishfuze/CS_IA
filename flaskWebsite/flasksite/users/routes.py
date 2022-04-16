@@ -23,7 +23,7 @@ def login():
             return redirect(url_for('staticPages.home'))
         else:
             flash('Login unsuccessful, please check your username and password', 'danger')
-    return render_template('login.html', title='Name - login', logggedIn=False, roles=[], form=form)
+    return render_template('login.html', title='Login', logggedIn=False, roles=[], form=form)
 
 
 @users.route("/register", methods=['GET', 'POST'])
@@ -35,24 +35,10 @@ def register():
         registerUser(form.username.data, form.email.data, form.password.data)
         flash(f'Account created for {form.username.data}!', 'success')
         return redirect(url_for('staticPages.home'))
-    return render_template('register.html', title='Name - register', logggedIn=False, roles=[], form=form)
+    return render_template('register.html', title='Register', logggedIn=False, roles=[], form=form)
 
 
 @users.route("/logout", methods=['GET', 'POST'])
 def logout():
     session.pop('username', None)
     return redirect(url_for('staticPages.home'))
-
-
-@users.route("/reset_password/<token>", methods=['GET', 'POST'])
-def reset_password(token):
-    if 'username' in session:
-        return redirect(url_for('staticPages.home'))
-    s = TokenSerializer(current_app.config['SECRET_KEY'])
-    username = ''
-    try:
-        username = s.loads(token)
-    except:
-        flash('That token is invalid or expired!', 'warning')
-        return redirect(url_for('staticPages.home'))
-    userData = getUserData(username)

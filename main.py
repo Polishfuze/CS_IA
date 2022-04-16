@@ -11,9 +11,13 @@ x = None
 listOfStudentIDs = []
 
 for i in DBInterface.pullAllStudents():
-    ID = i['StudentID']
-    ID = RFIDreader.Padder(ID)
-    listOfStudentIDs.append(ID)
+    print(i)
+    try:
+        ID = i['StudentUID']
+        ID = RFIDreader.Padder(ID)
+        listOfStudentIDs.append(ID)
+    except KeyError:
+        pass
 print(listOfStudentIDs)
 
 prevX = ()
@@ -27,21 +31,23 @@ while True:
         ID = x[1]
         if ID == progTag:
             print("Programming Mode!")
-            studentToProgram = DBInterface.getStudentToProgram()
-            IDToProgram = studentToProgram['StudentID']
-            RFIDwriter.WriteMFRC522(IDToProgram)
-            time.sleep(0.1)
-            if RFIDreader.ReadMFRC522() != RFIDreader.Padder(IDToProgram):
-                print("Write Failed!!!")
-            else:
+            time.sleep(3)
+            try:
+                studentToProgram = DBInterface.getStudentToProgram()
+                IDToProgram = studentToProgram['UID']
+                print(IDToProgram)
+                RFIDwriter.WriteMFRC522(IDToProgram)
+                time.sleep(0.1)
                 listOfStudentIDs.append(RFIDreader.Padder(IDToProgram))
                 prevX = RFIDreader.Padder(IDToProgram)
+                DBInterface.onSuccesfulProgram(studentToProgram['StudentName'], studentToProgram['HeadTeacher'], studentToProgram['UID'])
+            except IndexError:
+                print("NOTHING TO PROGRAM :(")
         else:
-            while len(ID) < len(progTag):
-                ID = RFIDreader.Padder(ID)
+            ID = RFIDreader.Padder(ID)
             if ID in listOfStudentIDs:
                 print(f"Student with id {ID.split(' ')[0]} was here!")
-                DBInterface.pushStudent(ID.split(' ')[0])
+                DBInterface.StudentChangedState(ID.split(' ')[0])
             else:
                 print("Unknown tag!!!")
     else:

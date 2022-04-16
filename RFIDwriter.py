@@ -17,4 +17,4 @@ def WriteMFRC522(data = '', debug=False):
         
         
 if __name__ == '__main__':
-    WriteMFRC522(data='-953851664')
+    WriteMFRC522(data='PROGWITHMEPLEASE                                ')

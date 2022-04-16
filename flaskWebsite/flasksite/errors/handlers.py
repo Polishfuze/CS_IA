@@ -11,7 +11,7 @@ def error_404(error):
     else:
         loggedIn = True
         roles = session['roles']
-    return render_template('errors/404page.html', logggedIn=loggedIn, roles=roles), 404
+    return render_template('errors/404page.html', title="Error 404", logggedIn=loggedIn, roles=roles), 404
 
 
 @errors.app_errorhandler(500)
@@ -22,4 +22,4 @@ def error_500(error):
     else:
         loggedIn = True
         roles = session['roles']
-    return render_template('errors/500page.html', logggedIn=loggedIn, roles=roles), 500
+    return render_template('errors/500page.html', title="Error 500", logggedIn=loggedIn, roles=roles), 500

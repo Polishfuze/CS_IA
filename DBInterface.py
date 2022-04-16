@@ -149,7 +149,7 @@ def GetAllStudents():
     return(studentDict)
 
 
-def StudentChangedState(UID, Name):
+def StudentChangedState(UID):
     """This function is used to update table2 and append table1"""
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
     tableToUpdate = dynamodb.Table('CSIA_Students_Table')
@@ -162,24 +162,19 @@ def StudentChangedState(UID, Name):
         'FilterExpression': Key('StudentUID').eq(UID)
     }
     response = tableToAppend.scan(**scan_kwargs)
-
-    prevMovement = response['Items'][0]['Movement']
+    name = response['Items'][0]['StudentName']
+    prevMovement = response['Items'][0]['isInSchool']
     prevInd = response['Count']
-    currMovement = ''
-    if prevMovement == 'OutOfSchool':
-        currMovement = 'IntoSchool'
-    else:
-        currMovement = 'OutOfSchool'
     data = {
         'MovementID': int(prevInd),
         'StudentUID': UID,
-        'StudentName': Name,
-        'Movement': currMovement,
+        'StudentName': name,
+        'isInSchool': not prevMovement,
         'Timestamp': int(timeNow)
     }
     tableToAppend.put_item(Item=data)
 
-    response = tableToUpdate.get_item(Key={'StudentName': Name})
+    response = tableToUpdate.get_item(Key={'StudentName': name})
     currState = ''
     prevState = response['Item']['State']
 
@@ -188,7 +183,7 @@ def StudentChangedState(UID, Name):
     else:
         currState = 'OutOfSchool'
     data = {
-        'StudentName': Name,
+        'StudentName': name,
         'Headteacher': response['Item']['Headteacher'],
         'State': currState,
         'UID': UID
@@ -209,16 +204,18 @@ def pullAllStudents():
     table = dynamodb.Table('CSIA_Students_Table')
     return table.scan()['Items']
 
-def onSuccesfulProgram(name, teacher):
+def onSuccesfulProgram(name, teacher, uid):
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
     table = dynamodb.Table('CSIA_Programming_Table')
-    table.delete_item(Key=name)
+    table.delete_item(Key={'StudentName': name})
     table = dynamodb.Table('CSIA_Movement_Table')
     data = {
-        'MovementID': f'{0}',
+        'StudentUID': uid,
+        'MovementID': 0,
         'StudentName': f'{name}',
-        'Timestamp': f'{0}',
-        'Movement': f'{0}',
+        'Timestamp': 0,
+        'isInSchool': False,
+        
     }
     table.put_item(Item=data)
     table = dynamodb.Table('CSIA_Students_Table')
@@ -226,35 +223,25 @@ def onSuccesfulProgram(name, teacher):
         'StudentName': f'{name}',
         'State': f'{0}',
         'Headteacher': f'{teacher}',
+        'StudentUID': uid,
     }
     table.put_item(Item=data)
     pass
-#
-#
-# def pullStudentByID(studentID):
-#     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
-#     table = dynamodb.Table('CSIAMovementTable')
-#     response = table.query(
-#     KeyConditionExpression=Key('StudentID').eq(studentID)
-#     )
-#     if response is not None:
-#         return response['item']
-#     else:
-#         return False
-#
 
 
 def isStudentPresent(studentID):
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
-    table = dynamodb.Table('CSIAMovementTable')
-    response = table.scan(FilterExpression=Key('StudentID').eq(str(studentID)))
+    table = dynamodb.Table('CSIA_Movement_Table')
+    response = table.scan(FilterExpression=Key('StudentUID').eq(str(studentID)))
     return response
 
 
 def pushStudent(studentId, index=None, date=None, timeR=None, debug=False):
     isInSchool = True
+    name = None
     if index is None:
         presentness = isStudentPresent(studentId)['Items']
+        print(presentness)
         if debug:
             print(presentness)
         if presentness == []:
@@ -262,21 +249,20 @@ def pushStudent(studentId, index=None, date=None, timeR=None, debug=False):
         else:
             from operator import itemgetter
             newlist = sorted(presentness, key=itemgetter(
-                'indexNum'), reverse=True)
-            index = newlist[0]['indexNum']
+                'MovementID'), reverse=True)
+            index = newlist[0]['MovementID']
             isInSchool = newlist[0]['isInSchool']
+            name = newlist[0]['StudentName']
     if date is None:
-        date = time.localtime(time.time())[0:3]
-        timeR = time.localtime(time.time())[3:6]
-    if debug:
-        print(
+        date = int(time.time())
+    print(
             f'Student ID: {studentId}, Index = {index+1}, they are in school? {isInSchool}')
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
-    table = dynamodb.Table('CSIAMovementTable')
-    studentJson = {'indexNum': index+1,
-                   'StudentID': str(studentId),
-                   'Date': date,
-                   'Time': timeR,
+    table = dynamodb.Table('CSIA_Movement_Table')
+    studentJson = {'StudentUID': str(studentId),
+                   'MovementID': index+1,
+                   'StudentName': f'{name}',
+                   'Timestamp': date,
                    'isInSchool': not isInSchool}
     table.put_item(Item=studentJson)
     return True

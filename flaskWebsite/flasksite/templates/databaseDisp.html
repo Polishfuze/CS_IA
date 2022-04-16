@@ -1,27 +1,40 @@
-{% extends "layout.html" %}
-{% block content %}
-<br>
-<h1>This is the view of the database and of all the interactions the student's interactions.</h1>
-<br>
-<h3>If you are looking for the view of every student consider looking at
-    the <a href="{{ url_for('databases.students') }}" class="text-decoration-none text-reset"> students tab </a></h3>
-<br>
-<br>
+{% extends "layout.html" %} {% block content %}
+<br />
+<h1>
+  This is the view of the database and of all the interactions the student's
+  interactions.
+</h1>
+<br />
+<h3>
+  If you are looking for the view of every student consider looking at the
+  <a
+    href="{{ url_for('databases.students') }}"
+    class="text-decoration-none text-reset"
+  >
+    students tab
+  </a>
+</h3>
+<br />
+<br />
 
 <table class="db">
-    <tr class="db_row">
-        <th class="db_cell">Index</th>
-        <th class="db_cell">Name</th>
-        <th class="db_cell">Time of operation</th>
-        <th class="db_cell">Direction of operation</th>
-    </tr>
-    {% for student in students %}
-    <tr class="db_row">
-        <td class="db_cell">{{student.MovementID}}</td>
-        <td class="db_cell">{{student.StudentName}}</td>
-        <td class="db_cell">{{student.Timestamp|timestampToDate}}</td>
-        <td class="db_cell">{{student.Movement}}</td>
-    </tr>
-    {% endfor %}
+  <tr class="db_row">
+    <th class="db_cell">Index</th>
+    <th class="db_cell">Name</th>
+    <th class="db_cell">Time of operation</th>
+    <th class="db_cell">Direction of operation</th>
+  </tr>
+  {% for student in students %}
+  <tr class="db_row">
+    <td class="db_cell">{{student.MovementID}}</td>
+    <td class="db_cell">{{student.StudentName}}</td>
+    <td class="db_cell">{{student.Timestamp|timestampToDate}}</td>
+    {% if student.isInSchool %}
+    <td class="db_cell">Out of school</td>
+    {% else %}
+    <td class="db_cell">Into school</td>
+    {% endif %}
+  </tr>
+  {% endfor %}
 </table>
 {% endblock %}

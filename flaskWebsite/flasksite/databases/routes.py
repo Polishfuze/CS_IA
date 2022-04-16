@@ -1,4 +1,4 @@
-from flask import Blueprint, session, redirect, render_template, flash, url_for
+from flask import Blueprint, session, redirect, render_template, flash, url_for, request
 from flasksite.databases.databaseMgmt import getAllMovement, getStudentsNormal, addStudentsToProg, getAllTeachers
 from flasksite.databases.forms import AddStudentForm
 from operator import itemgetter
@@ -22,9 +22,9 @@ def databaseDisp():
         loggedIn = True
         roles = session['roles']
     data = getAllMovement()
-    sortedStudents = sorted(data, key=itemgetter('MovementID'), reverse=True)
+    sortedStudents = sorted(data, key=itemgetter('Timestamp'), reverse=True)
+    return render_template('databaseDisp.html', students=sortedStudents, title='Detailed database view', logggedIn=loggedIn, roles=roles)
 
-    return render_template('databaseDisp.html', students=sortedStudents, title='Ur viewing the DB but detailed', logggedIn=loggedIn, roles=roles)
 
 
 @databases.route("/students", methods=['GET', 'POST'])
@@ -35,22 +35,25 @@ def students():
     else:
         loggedIn = True
         roles = session['roles']
-    return render_template('students.html', students=getStudentsNormal(), title='Ur viewing the DB', logggedIn=loggedIn, roles=roles)
+    return render_template('students.html', students=getStudentsNormal(), title='Student status view', logggedIn=loggedIn, roles=roles)
 
 
 @databases.route("/addstudents", methods=['GET', 'POST'])
 def addStudents():
-    print('a')
+    form = AddStudentForm(request.form)
+    form.teacherName.choices=getAllTeachers()
+    # print('a')
     if 'teacher' not in session['roles']:
         flash('You must be a teacher to view that section!', 'danger')
         return redirect(url_for('users.login'))
     else:
         loggedIn = True
         roles = session['roles']
-    print('b')
-    form = AddStudentForm()
-    if form.validate_on_submit():
-        addStudentsToProg(form.studentName, form.teacherName)
-        flash(f'Account created for {form.username.data}!', 'success')
-    form.teacherName.choices=getAllTeachers()
-    return render_template('addStudents.html', students=getStudentsNormal(), title='Ur viewing the DB', logggedIn=loggedIn, roles=roles, form=form)
+    # print('b')
+    valid = form.validate()
+    print(form.errors)
+    if valid:
+        print('e')
+        addStudentsToProg(form.studentName.data, form.teacherName.data)
+        flash(f'Account created for {form.studentName.data}!', 'success')
+    return render_template('addStudents.html', students=getStudentsNormal(), title='Add students', logggedIn=loggedIn, roles=roles, form=form)

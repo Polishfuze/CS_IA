@@ -22,7 +22,7 @@ def checkIfStudentExists(name):
     table2 = dynamodb.Table('CSIA_Programming_Table')
     response1 = table1.get_item(Key={'StudentName': f'{name}'})
     response2 = table2.get_item(Key={'StudentName': f'{name}'})
-    # print(response)
+    print(f"{response1}\n\n{response2}")
     return 'Item' in response1 or 'Item' in response2
 
 
@@ -30,27 +30,12 @@ def addStudentsToProg(name, teacher):
     dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
     table = dynamodb.Table('CSIA_Programming_Table')
     UIDHasher = hashlib.sha256()
-    UIDHasher.update(f"UID{name[::-1]}".encode())
-    UID = UIDHasher.hexdigest()
+    UIDHasher.update(f"UID{name}".encode())
+    UID = UIDHasher.hexdigest()[:16]
     data = {
         'StudentName': f'{name}',
         'HeadTeacher': f'{teacher}',
         'UID': f'{UID}',
-    }
-    table.put_item(Item=data)
-    table = dynamodb.Table('CSIA_Movement_Table')
-    data = {
-        'MovementID': f'{0}',
-        'StudentName': f'{name}',
-        'Timestamp': f'{0}',
-        'Movement': f'{0}',
-    }
-    table.put_item(Item=data)
-    table = dynamodb.Table('CSIA_Students_Table')
-    data = {
-        'StudentName': f'{name}',
-        'State': f'{0}',
-        'Headteacher': f'{teacher}',
     }
     table.put_item(Item=data)
     return
